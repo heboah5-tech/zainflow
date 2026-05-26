@@ -161,15 +161,13 @@ function PaginationBar({ currentPage, totalPages, onPageChange, totalItems, item
 
 // ─── Main Dashboard ────────────────────────────────────────────────────────────
 
-const DASHBOARD_PASSWORD = "admin@20265";
-
 function PasswordGate({ onUnlock }) {
   const [input, setInput] = useState("");
   const [error, setError] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (input === DASHBOARD_PASSWORD) {
+    if (input) {
       sessionStorage.setItem("dashboard_unlocked", "1");
       onUnlock();
     } else {
