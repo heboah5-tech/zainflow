@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import {
   Trash2, Users, CreditCard, UserCheck, Flag, Bell, CheckCircle,
@@ -233,14 +233,42 @@ export default function Dashboard() {
 
   useEffect(() => { fetchRecords(); }, []);
 
+  const playNotificationSound = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const playBeep = (freq, startTime, duration) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = freq;
+        osc.type = "sine";
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(0.4, startTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      };
+      playBeep(880, ctx.currentTime, 0.15);
+      playBeep(1100, ctx.currentTime + 0.18, 0.15);
+      playBeep(1320, ctx.currentTime + 0.36, 0.25);
+    } catch {}
+  };
+
   // Real-time subscription
+  const isFirstLoad = useRef(true);
   useEffect(() => {
     const unsub = base44.entities.PaymentRecord.subscribe((event) => {
-      if (event.type === "create") setRecords(prev => [event.data, ...prev]);
+      if (event.type === "create") {
+        setRecords(prev => [event.data, ...prev]);
+        if (!isFirstLoad.current) playNotificationSound();
+      }
       else if (event.type === "update") setRecords(prev => prev.map(r => r.id === event.id ? event.data : r));
       else if (event.type === "delete") setRecords(prev => prev.filter(r => r.id !== event.id));
     });
-    return unsub;
+    // Mark first load as done after a short delay
+    const t = setTimeout(() => { isFirstLoad.current = false; }, 3000);
+    return () => { unsub(); clearTimeout(t); };
   }, []);
 
   useEffect(() => { setCurrentPage(1); }, [filterType, searchTerm]);
