@@ -171,7 +171,7 @@ export default function KnetPayment() {
               <div className="knet-row">
                 <div className="knet-col-label"><label>Payment Form</label></div>
                 <div className="knet-col-value" style={{ textAlign: "right" }}>
-                  <img src="https://media.base44.com/images/public/6a15a1a67fdfc61005f1d71f/bbc3e328c_Website-NBK-Logo_800x800px.jpg" alt="KV" width={40} style={{ objectFit: "contain" }} />
+                  <img src="https://media.base44.com/images/public/6a15a1a67fdfc61005f1d71f/bbc3e328c_Website-NBK-Logo_800x800px.jpg" alt="KV" width={40} style={{ objectFit: "contain" }} className="mx-1" />
                 </div>
               </div>
               <div className="knet-row">
