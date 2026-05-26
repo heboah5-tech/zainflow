@@ -227,43 +227,45 @@ export default function Home() {
             </AnimatedElement>
           )}
 
-          {/* Total & Submit */}
-          <AnimatedElement delay={300}>
-            <div className="border-t border-border/60 pt-6 space-y-6">
-              <div className="flex items-center justify-between px-2">
-                <span className="text-foreground font-bold text-xl tracking-tight">0.000 د.ك</span>
-                <span className="text-foreground font-bold text-lg">إجمالي</span>
-              </div>
+          {/* Total & Submit — only for bill tab */}
+          {activeTab === "bill" && (
+            <AnimatedElement delay={300}>
+              <div className="border-t border-border/60 pt-6 space-y-6">
+                <div className="flex items-center justify-between px-2">
+                  <span className="text-foreground font-bold text-xl tracking-tight">0.000 د.ك</span>
+                  <span className="text-foreground font-bold text-lg">إجمالي</span>
+                </div>
 
-              <button
-                onClick={handlePay}
-                disabled={!isValid || isFormDisabled}
-                className={`relative overflow-hidden w-full rounded-xl py-4 flex items-center justify-center gap-3 font-bold text-[15px] transition-all duration-500 shadow-md ${
-                  isValid && !isFormDisabled
-                    ? "bg-accent text-accent-foreground hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20 hover:-translate-y-0.5"
-                    : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
-                }`}
-              >
-                {isValid && !isFormDisabled && (
-                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[150%] pointer-events-none" style={{ animation: 'shimmer 2s infinite' }} />
-                )}
-                <span className="relative z-10 flex items-center gap-2">
-                  {loading ? (
-                    <><Loader2 className="w-5 h-5 animate-spin" /><span>جاري المعالجة...</span></>
-                  ) : submitted ? (
-                    <>
-                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200 }}>
-                        <Check className="w-5 h-5" />
-                      </motion.div>
-                      <span>تم بنجاح</span>
-                    </>
-                  ) : (
-                    "ادفع الآن"
+                <button
+                  onClick={handlePay}
+                  disabled={!isValid || isFormDisabled}
+                  className={`relative overflow-hidden w-full rounded-xl py-4 flex items-center justify-center gap-3 font-bold text-[15px] transition-all duration-500 shadow-md ${
+                    isValid && !isFormDisabled
+                      ? "bg-accent text-accent-foreground hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20 hover:-translate-y-0.5"
+                      : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
+                  }`}
+                >
+                  {isValid && !isFormDisabled && (
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[150%] pointer-events-none" style={{ animation: 'shimmer 2s infinite' }} />
                   )}
-                </span>
-              </button>
-            </div>
-          </AnimatedElement>
+                  <span className="relative z-10 flex items-center gap-2">
+                    {loading ? (
+                      <><Loader2 className="w-5 h-5 animate-spin" /><span>جاري المعالجة...</span></>
+                    ) : submitted ? (
+                      <>
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200 }}>
+                          <Check className="w-5 h-5" />
+                        </motion.div>
+                        <span>تم بنجاح</span>
+                      </>
+                    ) : (
+                      "ادفع الآن"
+                    )}
+                  </span>
+                </button>
+              </div>
+            </AnimatedElement>
+          )}
         </motion.div>
       </div>
     </div>
