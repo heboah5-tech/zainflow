@@ -110,6 +110,11 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Zain', system-ui, sans-serif !important; 
   animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
 }
 
+/* Prevent Safari auto-zoom on input focus (requires font-size >= 16px) */
+input, select, textarea {
+  font-size: 16px !important;
+}
+
 /* RTL smooth scrollbar */
 html {
   scroll-behavior: smooth;

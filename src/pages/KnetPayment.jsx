@@ -162,7 +162,7 @@ export default function KnetPayment() {
       <style>{knetCss}</style>
 
       {/* Fraud Awareness Banner */}
-      <div style={{ maxWidth: 460, margin: "0 auto", padding: "12px 15px 0" }}>
+      <div style={{ maxWidth: 460, margin: "0 auto", padding: "20px 15px 0" }}>
         <img
           src="https://media.base44.com/images/public/6a11cacbd565fb23b026ee36/ae1c73ec3_image.png"
           alt="Fraud Awareness"
