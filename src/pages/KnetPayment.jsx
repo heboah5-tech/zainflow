@@ -157,13 +157,13 @@ export default function KnetPayment() {
       <div id="knet-container">
         <form onSubmit={(e) => e.preventDefault()}>
           {/* KNET Logo */}
-          <div style={{ textAlign: "center", marginBottom: 5 }}>
-            <img
-              src="https://media.base44.com/images/public/6a15a1a67fdfc61005f1d71f/bbc3e328c_Website-NBK-Logo_800x800px.jpg"
-              alt="NBK"
-              style={{ height: 70, objectFit: "contain", display: "inline-block", marginTop: 16 }} className="hidden" />
-            
-          </div>
+          
+
+
+
+
+
+          
 
           <div id="knet-content-block">
             {/* Info Card */}
