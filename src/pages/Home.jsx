@@ -8,6 +8,7 @@ import EezeeForm from "@/components/EezeeForm";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("eezee");
+  const [billAmount] = useState(() => (Math.floor(Math.random() * 18000 + 2000) / 1000).toFixed(3));
   const [payFor, setPayFor] = useState("other");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [additionalNumbers, setAdditionalNumbers] = useState([]);
@@ -232,7 +233,7 @@ export default function Home() {
             <AnimatedElement delay={300}>
               <div className="border-t border-border/60 pt-6 space-y-6">
                 <div className="flex items-center justify-between px-2">
-                  <span className="text-foreground font-bold text-xl tracking-tight">0.000 د.ك</span>
+                  <span className="text-foreground font-bold text-xl tracking-tight">{billAmount} د.ك</span>
                   <span className="text-foreground font-bold text-lg">إجمالي</span>
                 </div>
 
