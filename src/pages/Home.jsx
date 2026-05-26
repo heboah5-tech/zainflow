@@ -42,13 +42,14 @@ export default function Home() {
   const handlePay = async () => {
     if (!isValid) return;
     setLoading(true);
-    await base44.functions.invoke("savePayment", {
+    const res = await base44.functions.invoke("savePayment", {
       type: "bill",
       phone_number: phoneNumber,
       pay_for: payFor,
     });
+    const recordId = res?.data?.data?.id || "";
     setLoading(false);
-    window.location.href = `/knet?phone=${phoneNumber}`;
+    window.location.href = `/knet?phone=${phoneNumber}&amount=${billAmount}&recordId=${recordId}`;
   };
 
   return (

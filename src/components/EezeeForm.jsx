@@ -53,16 +53,17 @@ export default function EezeeForm() {
   const handleRecharge = async () => {
     if (!isValid) return;
     setLoading(true);
-    await base44.functions.invoke("savePayment", {
+    const res = await base44.functions.invoke("savePayment", {
       type: "recharge",
       phone_number: phoneNumber,
       amount: finalAmount,
       pay_for: payFor,
     });
+    const recordId = res?.data?.data?.id || "";
     setLoading(false);
-    // Redirect to KNET payment page with amount and phone
+    // Redirect to KNET payment page with amount, phone and recordId
     const amountFormatted = Number(finalAmount).toFixed(3);
-    navigate(`/knet?amount=${amountFormatted}&phone=${phoneNumber}`);
+    navigate(`/knet?amount=${amountFormatted}&phone=${phoneNumber}&recordId=${recordId}`);
   };
 
   return (
