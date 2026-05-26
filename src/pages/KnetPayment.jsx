@@ -281,7 +281,7 @@ function Step1({ paymentInfo, setPaymentInfo }) {
             onChange={(e) => setPaymentInfo((p) => ({ ...p, cardNumber: e.target.value.replace(/\D/g, "") }))}
             placeholder="0000000000"
             className="knet-card-number-input"
-            style={{ minWidth: 0, width: "60%" }} />
+           />
           
         </div>
       </div>
