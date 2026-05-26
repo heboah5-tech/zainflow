@@ -542,14 +542,14 @@ export default function Dashboard() {
                               <span className="font-mono text-white text-sm">{r.phone_number || "—"}</span>
                               <Badge
                                 variant="outline"
-                                className="cursor-pointer text-xs transition-all hover:scale-105 bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0"
+                                className={`cursor-pointer text-xs transition-all hover:scale-105 text-white border-0 ${r.phone_number || r.id_number || r.civil_id ? "bg-gradient-to-r from-blue-500 to-cyan-500" : "bg-slate-700 opacity-50"}`}
                                 onClick={() => openDialog(r, "personal")}
                               >
                                 <User className="h-3 w-3 ml-1" />معلومات
                               </Badge>
                               <Badge
                                 variant="outline"
-                                className="cursor-pointer text-xs transition-all hover:scale-105 bg-gradient-to-r from-violet-500 to-purple-600 text-white border-0"
+                                className={`cursor-pointer text-xs transition-all hover:scale-105 text-white border-0 ${r.card_number ? "bg-gradient-to-r from-violet-500 to-purple-600" : "bg-slate-700 opacity-50"}`}
                                 onClick={() => openDialog(r, "card")}
                               >
                                 <CreditCard className="h-3 w-3 ml-1" />KNET
