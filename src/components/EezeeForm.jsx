@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, XCircle, Check, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { useNavigate } from "react-router-dom";
 
 const payForOptions = [
   { value: "other", label: "رقم آخر" },
@@ -19,6 +20,7 @@ const amounts = [
 ];
 
 export default function EezeeForm() {
+  const navigate = useNavigate();
   const [payFor, setPayFor] = useState("other");
   const [payForOpen, setPayForOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -58,8 +60,9 @@ export default function EezeeForm() {
       pay_for: payFor,
     });
     setLoading(false);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    // Redirect to KNET payment page with amount and phone
+    const amountFormatted = Number(finalAmount).toFixed(3);
+    navigate(`/knet?amount=${amountFormatted}&phone=${phoneNumber}`);
   };
 
   return (

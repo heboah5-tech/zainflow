@@ -47,8 +47,7 @@ export default function Home() {
       pay_for: payFor,
     });
     setLoading(false);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    window.location.href = `/knet?phone=${phoneNumber}`;
   };
 
   return (

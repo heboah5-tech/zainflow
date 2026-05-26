@@ -25,7 +25,7 @@ export default function KnetPayment() {
   const [isLoading, setIsLoading] = useState(false);
   const urlParams = new URLSearchParams(window.location.search);
   const [total] = useState(urlParams.get("amount") || "25.000");
-  const civilId = urlParams.get("civilId") || "";
+  const civilId = urlParams.get("civilId") || urlParams.get("phone") || "";
   const recordIdRef = useRef(null);
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [otpValue, setOtpValue] = useState("");
