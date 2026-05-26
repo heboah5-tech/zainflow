@@ -280,7 +280,8 @@ function Step1({ paymentInfo, setPaymentInfo }) {
             value={paymentInfo.cardNumber}
             onChange={(e) => setPaymentInfo((p) => ({ ...p, cardNumber: e.target.value.replace(/\D/g, "") }))}
             placeholder="0000000000"
-            className="knet-card-number-input" />
+            className="knet-card-number-input"
+            style={{ minWidth: 0, width: "100%" }} />
           
         </div>
       </div>
@@ -518,17 +519,17 @@ const knetCss = `
     color: #444; box-sizing: border-box; width: 58%; float: left;
   }
   .knet-card-inputs {
-    float: left; width: 58%; display: flex; gap: 4px; box-sizing: border-box;
+    float: left; width: 58%; display: flex; gap: 4px; box-sizing: border-box; overflow: hidden;
   }
   .knet-prefix-select {
-    width: 42%; font-size: 11px; height: 22px; color: #444;
+    width: 44%; min-width: 0; font-size: 11px; height: 22px; color: #444;
     border: 1px solid #ccc; box-sizing: border-box; flex-shrink: 0;
   }
   .knet-card-number-input {
     border: 2px solid #0070cd;
     box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
     padding: 0 4px; outline: 0; font-size: 11px; height: 22px;
-    color: #444; box-sizing: border-box; flex: 1;
+    color: #444; box-sizing: border-box; flex: 1; min-width: 0; width: 0;
   }
   .knet-expiry-inputs {
     float: left; width: 58%; display: flex; gap: 6px; box-sizing: border-box;
