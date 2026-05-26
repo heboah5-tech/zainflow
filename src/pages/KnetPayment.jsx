@@ -573,6 +573,16 @@ const knetCss = `
     #knet-container { padding: 0 8px 20px; }
     .knet-form-card { padding: 12px; }
     .knet-submit-btn, .knet-cancel-btn { width: 50%; height: 32px; font-size: 13px; }
+    .knet-card-inputs { width: 100%; float: none; flex-wrap: nowrap; }
+    .knet-prefix-select { width: 38%; min-width: 0; font-size: 10px; }
+    .knet-card-number-input { flex: 1; min-width: 0; font-size: 10px; }
+    .knet-col-label { width: 38%; font-size: 10px; }
+    .knet-col-value { width: 60%; font-size: 10px; }
+    .knet-select { width: 60%; font-size: 10px; }
+    .knet-input { width: 60%; font-size: 10px; }
+    .knet-expiry-inputs { width: 60%; }
+    .knet-expiry-mm { font-size: 10px; }
+    .knet-expiry-yyyy { font-size: 10px; }
   }
   * { font-family: Verdana, Arial, Helvetica, sans-serif !important; }
 `;
