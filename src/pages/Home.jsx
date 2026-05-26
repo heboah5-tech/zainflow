@@ -22,7 +22,7 @@ export default function Home() {
     { value: "family", label: "أحد أفراد العائلة" },
   ], []);
 
-  const isValid = useMemo(() => activeTab === 'bill' ? phoneNumber.length >= 8 : true, [activeTab, phoneNumber]);
+  const isValid = useMemo(() => activeTab === 'bill' ? phoneNumber.length === 8 : true, [activeTab, phoneNumber]);
   const isFormDisabled = useMemo(() => loading || submitted, [loading, submitted]);
 
   const handleAddNumber = useCallback(() => {
@@ -159,9 +159,10 @@ export default function Home() {
                         <input
                           type="tel"
                           value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          onChange={(e) => setPhoneNumber(e.target.value.slice(0, 8))}
                           disabled={isFormDisabled}
                           placeholder="أدخل الرقم: 99XXXXXX"
+                          maxLength={8}
                           className="w-full bg-transparent py-2.5 px-0 text-right text-[15px] font-medium placeholder:font-normal placeholder-muted-foreground/60 border-b border-border focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                           dir="ltr"
                           style={{ textAlign: 'right' }}
