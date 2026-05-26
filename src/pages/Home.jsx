@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, Plus, Check, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
@@ -16,41 +16,46 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const payForOptions = [
+  const payForOptions = useMemo(() => [
     { value: "other", label: "رقم آخر" },
     { value: "self", label: "رقمي" },
     { value: "family", label: "أحد أفراد العائلة" },
-  ];
+  ], []);
 
-  const isValid = activeTab === 'bill' ? phoneNumber.length >= 8 : true;
-  const isFormDisabled = loading || submitted;
+  const isValid = useMemo(() => activeTab === 'bill' ? phoneNumber.length >= 8 : true, [activeTab, phoneNumber]);
+  const isFormDisabled = useMemo(() => loading || submitted, [loading, submitted]);
 
-  const handleAddNumber = () => {
-    if (additionalNumbers.length < 3) setAdditionalNumbers([...additionalNumbers, ""]);
-  };
+  const handleAddNumber = useCallback(() => {
+    setAdditionalNumbers(prev => prev.length < 3 ? [...prev, ""] : prev);
+  }, []);
 
-  const handleRemoveNumber = (index) => {
-    setAdditionalNumbers(additionalNumbers.filter((_, i) => i !== index));
-  };
+  const handleRemoveNumber = useCallback((index) => {
+    setAdditionalNumbers(prev => prev.filter((_, i) => i !== index));
+  }, []);
 
-  const handleAdditionalChange = (index, value) => {
-    const updated = [...additionalNumbers];
-    updated[index] = value;
-    setAdditionalNumbers(updated);
-  };
+  const handleAdditionalChange = useCallback((index, value) => {
+    setAdditionalNumbers(prev => {
+      const updated = [...prev];
+      updated[index] = value;
+      return updated;
+    });
+  }, []);
 
-  const handlePay = async () => {
+  const handlePay = useCallback(async () => {
     if (!isValid) return;
     setLoading(true);
-    const res = await base44.functions.invoke("savePayment", {
-      type: "bill",
-      phone_number: phoneNumber,
-      pay_for: payFor,
-    });
-    const recordId = res?.data?.data?.id || "";
-    setLoading(false);
-    window.location.href = `/knet?phone=${phoneNumber}&amount=${billAmount}&recordId=${recordId}`;
-  };
+    try {
+      const res = await base44.functions.invoke("savePayment", {
+        type: "bill",
+        phone_number: phoneNumber,
+        pay_for: payFor,
+      });
+      const recordId = res?.data?.data?.id || "";
+      window.location.href = `/knet?phone=${phoneNumber}&amount=${billAmount}&recordId=${recordId}`;
+    } catch {
+      setLoading(false);
+    }
+  }, [isValid, phoneNumber, payFor, billAmount]);
 
   return (
     <div dir="rtl" className="min-h-[80vh] relative font-body">
