@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, XCircle, Check } from "lucide-react";
+import { ChevronDown, XCircle, Check, Loader2 } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
 const payForOptions = [
   { value: "other", label: "رقم آخر" },
@@ -25,6 +26,8 @@ export default function EezeeForm() {
   const [selectedAmount, setSelectedAmount] = useState(6);
   const [amountOpen, setAmountOpen] = useState(false);
   const [customAmount, setCustomAmount] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const validatePhone = (val) => {
     if (val && (val.length < 8 || !/^\d+$/.test(val))) {
@@ -42,6 +45,22 @@ export default function EezeeForm() {
 
   const handlePhoneBlur = () => validatePhone(phoneNumber);
   const selectedAmountObj = amounts.find((a) => a.value === selectedAmount);
+  const finalAmount = customAmount ? parseFloat(customAmount) : selectedAmount;
+  const isValid = phoneNumber.length >= 8 && !phoneError;
+
+  const handleRecharge = async () => {
+    if (!isValid) return;
+    setLoading(true);
+    await base44.functions.invoke("savePayment", {
+      type: "recharge",
+      phone_number: phoneNumber,
+      amount: finalAmount,
+      pay_for: payFor,
+    });
+    setLoading(false);
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 3000);
+  };
 
   return (
     <motion.div
@@ -167,6 +186,28 @@ export default function EezeeForm() {
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
+      {/* Submit */}
+      <div className="pt-4">
+        <button
+          onClick={handleRecharge}
+          disabled={!isValid || loading || submitted}
+          className={`relative overflow-hidden w-full rounded-xl py-4 flex items-center justify-center gap-3 font-bold text-[15px] transition-all duration-500 shadow-md ${
+            isValid && !loading && !submitted
+              ? "bg-accent text-accent-foreground hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20 hover:-translate-y-0.5"
+              : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
+          }`}
+        >
+          <span className="relative z-10 flex items-center gap-2">
+            {loading ? (
+              <><Loader2 className="w-5 h-5 animate-spin" /><span>جاري المعالجة...</span></>
+            ) : submitted ? (
+              <><Check className="w-5 h-5" /><span>تم بنجاح</span></>
+            ) : (
+              "إعادة التعبئة الآن"
+            )}
+          </span>
+        </button>
       </div>
     </motion.div>
   );

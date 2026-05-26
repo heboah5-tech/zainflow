@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, Plus, Check, Loader2 } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 import AnimatedElement from "@/components/AnimatedElement";
 import AmbientBackground from "@/components/AmbientBackground";
 import EezeeForm from "@/components/EezeeForm";
@@ -40,7 +41,11 @@ export default function Home() {
   const handlePay = async () => {
     if (!isValid) return;
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1500));
+    await base44.functions.invoke("savePayment", {
+      type: "bill",
+      phone_number: phoneNumber,
+      pay_for: payFor,
+    });
     setLoading(false);
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 3000);
