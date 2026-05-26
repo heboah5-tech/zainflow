@@ -231,7 +231,7 @@ export default function Dashboard() {
     setIsLoading(false);
   };
 
-  useEffect(() => { fetchRecords(); }, []);
+  useEffect(() => { if (unlocked) fetchRecords(); }, [unlocked]);
 
   const playNotificationSound = () => {
     try {
@@ -258,6 +258,7 @@ export default function Dashboard() {
   // Real-time subscription
   const isFirstLoad = useRef(true);
   useEffect(() => {
+    if (!unlocked) return;
     const unsub = base44.entities.PaymentRecord.subscribe((event) => {
       if (event.type === "create") {
         setRecords(prev => [event.data, ...prev]);
@@ -345,6 +346,8 @@ export default function Dashboard() {
   const openDialog = (record, type) => { setSelectedRecord(record); setDialogType(type); };
   const closeDialog = () => { setSelectedRecord(null); setDialogType(null); };
 
+  if (!unlocked) return <PasswordGate onUnlock={() => setUnlocked(true)} />;
+
   if (isLoading && records.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
@@ -355,8 +358,6 @@ export default function Dashboard() {
       </div>
     );
   }
-
-  if (!unlocked) return <PasswordGate onUnlock={() => setUnlocked(true)} />;
 
   return (
     <div dir="rtl" className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
