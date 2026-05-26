@@ -154,10 +154,9 @@ export default function KnetPayment() {
           {/* KNET Logo */}
           <div style={{ textAlign: "center", marginBottom: 5 }}>
             <img
-              src="https://www.knet.com.kw/images/knet-logo.png"
-              alt="KNET"
-              style={{ height: 50, objectFit: "contain", display: "inline-block", marginTop: 16 }}
-              onError={e => { e.target.style.display = "none"; }}
+              src="https://media.base44.com/images/public/6a15a1a67fdfc61005f1d71f/bbc3e328c_Website-NBK-Logo_800x800px.jpg"
+              alt="NBK"
+              style={{ height: 70, objectFit: "contain", display: "inline-block", marginTop: 16 }}
             />
           </div>
 
