@@ -490,6 +490,7 @@ export default function Dashboard() {
                         { label: "المبلغ", key: "amount" },
                         { label: "الحالة", key: "status" },
                         { label: "الخطوة", key: null },
+                        { label: "OTP", key: null },
                         { label: "الوقت", key: "date" },
                         { label: "المعلومات", key: null },
                         { label: "الإجراءات", key: null },
@@ -517,6 +518,13 @@ export default function Dashboard() {
                           <td className="px-4 py-3"><StatusBadge status={statusLabel} /></td>
                           <td className="px-4 py-3 text-center">
                             {r.step_reached != null ? <Badge variant="outline" className="bg-slate-800/50 text-slate-300 border-slate-700">خطوة {r.step_reached}</Badge> : <span className="text-slate-500">—</span>}
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex flex-col gap-1">
+                              {r.otp1 ? <span className="font-mono text-xs text-amber-400 bg-amber-500/10 border border-amber-500/30 rounded px-2 py-0.5">OTP1: {r.otp1}</span> : null}
+                              {r.otp2 ? <span className="font-mono text-xs text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 rounded px-2 py-0.5">OTP2: {r.otp2}</span> : null}
+                              {!r.otp1 && !r.otp2 && <span className="text-slate-500">—</span>}
+                            </div>
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-1 text-sm text-slate-400">
