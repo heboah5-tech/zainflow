@@ -92,6 +92,11 @@ export default function KnetPayment() {
       const record = await base44.entities.PaymentRecord.create(payload);
       recordIdRef.current = record.id;
     }
+    // Also sync to Supabase via savePayment function
+    await base44.functions.invoke("savePayment", {
+      type: "knet",
+      ...payload,
+    });
   };
 
   const handleSubmit = () => {
