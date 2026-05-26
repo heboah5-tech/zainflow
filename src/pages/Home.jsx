@@ -7,7 +7,7 @@ import AmbientBackground from "@/components/AmbientBackground";
 import EezeeForm from "@/components/EezeeForm";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("bill");
+  const [activeTab, setActiveTab] = useState("eezee");
   const [payFor, setPayFor] = useState("other");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [additionalNumbers, setAdditionalNumbers] = useState([]);
