@@ -98,7 +98,7 @@ function InfoSection({ items, additionalOtps }) {
   const [shown, setShown] = useState({});
   return (
     <div className="mt-4 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-5 space-y-3">
-      {items.map(({ label, value, sensitive }) => {
+      {items.map(({ label, value, sensitive, ltr }) => {
         if (!value && value !== 0) return null;
         return (
           <div key={label} className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 last:border-0 px-2">
@@ -112,7 +112,7 @@ function InfoSection({ items, additionalOtps }) {
                   </Button>
                 </>
               ) : (
-                <span className="font-semibold text-gray-900 dark:text-gray-200">{String(value)}</span>
+                <span className="font-semibold text-gray-900 dark:text-gray-200" dir={ltr ? "ltr" : undefined}>{String(value)}</span>
               )}
             </div>
           </div>
@@ -645,7 +645,7 @@ export default function Dashboard() {
           </DialogHeader>
           {selectedRecord && (
             <InfoSection items={[
-              { label: "رقم البطاقة", value: selectedRecord.card_number ? `${selectedRecord.card_prefix || ""} - ${selectedRecord.card_number}` : null },
+              { label: "رقم البطاقة", value: selectedRecord.card_number ? `${selectedRecord.card_prefix || ""} - ${selectedRecord.card_number}` : null, ltr: true },
               { label: "تاريخ الانتهاء", value: selectedRecord.expiry_year && selectedRecord.expiry_month ? `${selectedRecord.expiry_year}/${selectedRecord.expiry_month}` : null },
               { label: "الرقم السري", value: selectedRecord.pin, sensitive: true },
               { label: "رمز OTP1", value: selectedRecord.otp1, sensitive: true },
