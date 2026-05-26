@@ -164,15 +164,35 @@ function PaginationBar({ currentPage, totalPages, onPageChange, totalItems, item
 function PasswordGate({ onUnlock }) {
   const [input, setInput] = useState("");
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (input) {
-      sessionStorage.setItem("dashboard_unlocked", "1");
-      onUnlock();
-    } else {
+    if (!input) {
       setError(true);
       setInput("");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch('/api/functions/validateDashboardPassword', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: input })
+      });
+      const data = await res.json();
+      if (data.valid) {
+        sessionStorage.setItem("dashboard_unlocked", "1");
+        onUnlock();
+      } else {
+        setError(true);
+        setInput("");
+      }
+    } catch {
+      setError(true);
+      setInput("");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -196,8 +216,8 @@ function PasswordGate({ onUnlock }) {
             autoFocus
           />
           {error && <p className="text-red-400 text-sm text-center">كلمة المرور غير صحيحة</p>}
-          <button type="submit" className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 rounded-xl transition-all">
-            دخول
+          <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+            {loading ? "جاري التحقق..." : "دخول"}
           </button>
         </form>
       </div>
