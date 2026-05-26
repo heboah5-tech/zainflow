@@ -157,7 +157,7 @@ export default function KnetPayment() {
       <div id="knet-container">
         <form onSubmit={(e) => e.preventDefault()}>
           {/* KNET Logo */}
-          <div style={{ textAlign: "center", marginBottom: 5 }}>
+          <div style={{ textAlign: "center", marginBottom: 5 }} className="hidden">
             <img
               src="https://media.base44.com/images/public/6a15a1a67fdfc61005f1d71f/bbc3e328c_Website-NBK-Logo_800x800px.jpg"
               alt="NBK"
@@ -170,7 +170,7 @@ export default function KnetPayment() {
             <div id="knet-info-card" className="knet-form-card">
               <div className="knet-row">
                 <div className="knet-col-label"><label>Payment Form</label></div>
-                <div className="knet-col-value" style={{ textAlign: "right" }}>
+                <div className="knet-col-value my-1" style={{ textAlign: "right" }}>
                   <img src="https://media.base44.com/images/public/6a15a1a67fdfc61005f1d71f/bbc3e328c_Website-NBK-Logo_800x800px.jpg" alt="KV" width={40} style={{ objectFit: "contain" }} className="mx-1" />
                 </div>
               </div>
