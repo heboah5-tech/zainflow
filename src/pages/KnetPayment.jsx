@@ -602,4 +602,12 @@ const knetCss = `
     .knet-expiry-yyyy { font-size: 10px; }
   }
   * { font-family: Verdana, Arial, Helvetica, sans-serif !important; }
+  #knet-container input, #knet-container select, #knet-container textarea {
+    font-size: 11px !important;
+  }
+  @media (max-width: 480px) {
+    #knet-container input, #knet-container select, #knet-container textarea {
+      font-size: 10px !important;
+    }
+  }
 `;
