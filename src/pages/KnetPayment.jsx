@@ -182,9 +182,9 @@ export default function KnetPayment() {
           
 
           {/* KNET Logo */}
-          <div style={{ textAlign: "center", marginBottom: 20 }} className="hidden">
-            <img src="https://media.base44.com/images/public/6a15a1a67fdfc61005f1d71f/bbc3e328c_Website-NBK-Logo_800x800px.jpg" alt="KNET" width={120} style={{ objectFit: "contain" }} />
-          </div>
+          
+
+          
 
           <div id="knet-content-block">
             {/* Info Card */}
