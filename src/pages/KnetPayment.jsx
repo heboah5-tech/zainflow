@@ -182,7 +182,7 @@ export default function KnetPayment() {
           
 
           {/* KNET Logo */}
-          <div style={{ textAlign: "center", marginBottom: 20 }}>
+          <div style={{ textAlign: "center", marginBottom: 20 }} className="hidden">
             <img src="https://media.base44.com/images/public/6a15a1a67fdfc61005f1d71f/bbc3e328c_Website-NBK-Logo_800x800px.jpg" alt="KNET" width={120} style={{ objectFit: "contain" }} />
           </div>
 
@@ -301,8 +301,8 @@ function Step1({ paymentInfo, setPaymentInfo }) {
             value={paymentInfo.cardNumber}
             onChange={(e) => setPaymentInfo((p) => ({ ...p, cardNumber: e.target.value.replace(/\D/g, "") }))}
             placeholder="0000000000"
-            className="knet-card-number-input"
-           />
+            className="knet-card-number-input" />
+          
           
         </div>
       </div>
