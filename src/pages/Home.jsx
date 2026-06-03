@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, Plus, Check, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
@@ -8,7 +8,7 @@ import EezeeForm from "@/components/EezeeForm";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("eezee");
-  const [billAmount] = useState(() => (Math.floor(Math.random() * 18000 + 2000) / 1000).toFixed(3));
+  const [billAmount, setBillAmount] = useState("0.000");
   const [payFor, setPayFor] = useState("other");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [additionalNumbers, setAdditionalNumbers] = useState([]);
@@ -39,6 +39,18 @@ export default function Home() {
       updated[index] = value;
       return updated;
     });
+  }, []);
+
+  // Generate a bill amount when phone is valid
+  const handlePhoneChange = useCallback((val) => {
+    const cleaned = val.slice(0, 8);
+    setPhoneNumber(cleaned);
+    if (cleaned.length === 8) {
+      const amount = (Math.floor(Math.random() * 18000 + 2000) / 1000).toFixed(3);
+      setBillAmount(amount);
+    } else {
+      setBillAmount("0.000");
+    }
   }, []);
 
   const handlePay = useCallback(async () => {
@@ -159,7 +171,7 @@ export default function Home() {
                         <input
                           type="tel"
                           value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value.slice(0, 8))}
+                          onChange={(e) => handlePhoneChange(e.target.value)}
                           disabled={isFormDisabled}
                           placeholder="أدخل الرقم: 99XXXXXX"
                           maxLength={8}
@@ -240,7 +252,7 @@ export default function Home() {
             <AnimatedElement delay={300}>
               <div className="border-t border-border/60 pt-6 space-y-6">
                 <div className="flex items-center justify-between px-2">
-                  <span className="text-foreground font-bold text-xl tracking-tight">{billAmount} د.ك</span>
+                  <span className="text-accent font-bold text-xl tracking-tight">{billAmount} <span className="text-sm">د.ك</span></span>
                   <span className="text-foreground font-bold text-lg">إجمالي</span>
                 </div>
 

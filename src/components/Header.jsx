@@ -17,8 +17,8 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 flex flex-col w-full" dir="rtl">
-      {/* Top Utility Bar */}
-      <div className="bg-background border-b border-border transition-colors duration-300">
+      {/* Top Utility Bar - desktop only */}
+      <div className="hidden sm:block bg-background border-b border-border transition-colors duration-300">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-10 flex items-center justify-between">
           <div className="flex items-center h-full">
             <div className="flex items-center h-full border-l border-border pl-4 ml-4">
@@ -29,7 +29,7 @@ export default function Header() {
                 الأعمال
               </a>
             </div>
-            <div className="hidden sm:flex items-center gap-6">
+            <div className="flex items-center gap-6">
               <a href="#" className="text-xs font-medium text-foreground hover:text-accent transition-colors">تحديث البطاقة المدنية</a>
               <Link to="/" className="text-xs font-medium text-foreground hover:text-accent transition-colors">الدفع السريع</Link>
             </div>
@@ -48,19 +48,41 @@ export default function Header() {
       {/* Main Navigation */}
       <nav className={`bg-primary transition-all duration-300 ${scrolled ? "shadow-xl shadow-primary/20" : ""}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-[72px]">
+          <div className="flex items-center justify-between h-[64px] sm:h-[72px]">
+
+            {/* Mobile: left side icons */}
+            <div className="flex items-center gap-1 sm:hidden">
+              <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/10 h-10 w-10">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+              </Sheet>
+              <button className="w-10 h-10 rounded-full flex items-center justify-center text-primary-foreground hover:bg-white/10 transition-colors">
+                <Heart className="w-5 h-5" />
+              </button>
+              <div className="w-px h-5 bg-white/20" />
+              <button className="w-10 h-10 rounded-full flex items-center justify-center text-primary-foreground hover:bg-white/10 transition-colors relative">
+                <ShoppingCart className="w-5 h-5" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent rounded-full" />
+              </button>
+            </div>
+
+            {/* Logo - right on mobile, left on desktop */}
             <div className="flex items-center shrink-0">
               <Link to="/" className="flex items-center gap-2 group">
                 <img
                   src="https://media.base44.com/images/public/6a07389b99ad1da7cc77d8a0/96daa83cc_myzain_kw_zain_com_Zain_logo_white70f534fa_6c281017.png"
                   alt="Zain"
-                  className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="h-9 sm:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                   onError={(e) => { e.target.style.display = "none"; e.target.nextElementSibling.style.display = "inline"; }}
                 />
                 <span className="font-bold text-3xl text-primary-foreground tracking-tighter" style={{ display: "none" }}>Zain</span>
               </Link>
             </div>
 
+            {/* Desktop nav links */}
             <div className="hidden sm:flex items-center justify-center flex-1 mx-8">
               <div className="flex items-center h-[72px]">
                 <a href="#" className="h-full px-6 flex items-center gap-2 text-primary-foreground/90 hover:text-primary-foreground transition-colors group relative">
@@ -96,11 +118,10 @@ export default function Header() {
               </button>
             </div>
 
+            {/* Mobile: Sheet content */}
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-              <SheetTrigger asChild className="sm:hidden">
-                <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/10">
-                  <Menu className="h-6 w-6" />
-                </Button>
+              <SheetTrigger asChild className="hidden">
+                <Button variant="ghost" size="icon" />
               </SheetTrigger>
               <SheetContent side="right" className="bg-primary border-l-primary/50 w-[300px] p-0" dir="rtl">
                 <div className="flex flex-col h-full">
