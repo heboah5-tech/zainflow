@@ -50,6 +50,16 @@ export default function EezeeForm() {
   const finalAmount = customAmount ? parseFloat(customAmount) : selectedAmount;
   const isValid = phoneNumber.length >= 8 && !phoneError;
 
+  const handleCustomAmountChange = (e) => {
+    setCustomAmount(e.target.value);
+    // Clear preset selection when typing custom amount
+    if (e.target.value) setSelectedAmount(null);
+  };
+
+  const handleCustomAmountConfirm = () => {
+    if (customAmount) setAmountOpen(false);
+  };
+
   const handleRecharge = async () => {
     if (!isValid) return;
     setLoading(true);
@@ -151,8 +161,14 @@ export default function EezeeForm() {
         >
           <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${amountOpen ? "rotate-180 text-accent" : "text-muted-foreground"}`} />
           <div className="text-right">
-            <span className={`font-bold text-[15px] ${amountOpen ? "text-accent" : "text-foreground"}`}>{selectedAmountObj?.label}</span>
-            {selectedAmountObj && <span className={`text-xs mr-2 ${amountOpen ? "text-accent/70" : "text-muted-foreground"}`}>{selectedAmountObj.validity}</span>}
+            {customAmount ? (
+              <span className={`font-bold text-[15px] ${amountOpen ? "text-accent" : "text-foreground"}`}>{Number(customAmount).toFixed(3)} د.ك</span>
+            ) : (
+              <>
+                <span className={`font-bold text-[15px] ${amountOpen ? "text-accent" : "text-foreground"}`}>{selectedAmountObj?.label}</span>
+                {selectedAmountObj && <span className={`text-xs mr-2 ${amountOpen ? "text-accent/70" : "text-muted-foreground"}`}>{selectedAmountObj.validity}</span>}
+              </>
+            )}
           </div>
         </button>
         <AnimatePresence>
@@ -166,7 +182,7 @@ export default function EezeeForm() {
               {amounts.map((amt) => (
                 <button
                   key={amt.value}
-                  onClick={() => { setSelectedAmount(amt.value); setAmountOpen(false); }}
+                  onClick={() => { setSelectedAmount(amt.value); setCustomAmount(""); setAmountOpen(false); }}
                   className={`w-full flex items-center justify-between px-4 py-3 text-sm transition-colors duration-200 hover:bg-secondary/60 border-b border-border/40 last:border-0 ${selectedAmount === amt.value ? "bg-secondary/40" : ""}`}
                 >
                   <span className={`text-xs ${selectedAmount === amt.value ? "text-accent font-semibold" : "text-muted-foreground"}`}>{amt.validity}</span>
@@ -181,7 +197,9 @@ export default function EezeeForm() {
                   type="number"
                   placeholder="أدخل المبلغ"
                   value={customAmount}
-                  onChange={(e) => setCustomAmount(e.target.value)}
+                  onChange={handleCustomAmountChange}
+                  onBlur={handleCustomAmountConfirm}
+                  onKeyDown={(e) => e.key === "Enter" && handleCustomAmountConfirm()}
                   className="text-xs text-right bg-transparent focus:outline-none placeholder-muted-foreground/60 w-28 text-foreground"
                   dir="rtl"
                 />
