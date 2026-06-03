@@ -81,7 +81,7 @@ export default function EezeeForm() {
         <button
           onClick={() => setPayForOpen(!payForOpen)}
           type="button"
-          className={`w-full bg-transparent py-2 px-0 text-right flex items-center justify-between focus:outline-none transition-all duration-300 border-b ${payForOpen ? "border-accent text-accent" : "border-border text-foreground hover:border-foreground/50"}`}
+          className={`w-full bg-transparent py-2 px-0 text-right flex items-center justify-between focus:outline-none transition-all duration-300 border-b ${payForOpen ? "border-accent text-accent" : "border-accent text-foreground"}`}
         >
           <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${payForOpen ? "rotate-180 text-accent" : "text-muted-foreground"}`} />
           <span className="font-medium text-[15px]">{payForOptions.find((o) => o.value === payFor)?.label}</span>
@@ -120,7 +120,7 @@ export default function EezeeForm() {
             onChange={handlePhoneChange}
             onBlur={handlePhoneBlur}
             placeholder="98752224"
-            className={`w-full bg-transparent py-2.5 px-0 text-right text-[15px] font-medium placeholder-muted-foreground/60 border-b focus:outline-none transition-all duration-300 ${phoneError ? "border-destructive" : "border-border focus:border-accent"}`}
+            className={`w-full bg-transparent py-2.5 px-0 text-right text-[15px] font-medium placeholder-muted-foreground/60 border-b focus:outline-none transition-all duration-300 ${phoneError ? "border-destructive" : "border-accent focus:border-accent"}`}
             dir="ltr"
             style={{ textAlign: "right" }}
           />
@@ -147,7 +147,7 @@ export default function EezeeForm() {
         <button
           onClick={() => setAmountOpen(!amountOpen)}
           type="button"
-          className={`w-full bg-transparent py-2 px-0 text-right flex items-center justify-between focus:outline-none transition-all duration-300 border-b ${amountOpen ? "border-accent" : "border-border"}`}
+          className={`w-full bg-transparent py-2 px-0 text-right flex items-center justify-between focus:outline-none transition-all duration-300 border-b border-accent`}
         >
           <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${amountOpen ? "rotate-180 text-accent" : "text-muted-foreground"}`} />
           <div className="text-right">

@@ -142,7 +142,7 @@ export default function Home() {
                         onClick={() => !isFormDisabled && setPayForOpen(!payForOpen)}
                         type="button"
                         disabled={isFormDisabled}
-                        className={`w-full bg-transparent py-2 px-0 text-right flex items-center justify-between focus:outline-none transition-all duration-300 border-b ${payForOpen ? 'border-accent text-accent' : 'border-border text-foreground hover:border-foreground/50'} disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className={`w-full bg-transparent py-2 px-0 text-right flex items-center justify-between focus:outline-none transition-all duration-300 border-b ${payForOpen ? 'border-accent text-accent' : 'border-accent text-foreground'} disabled:opacity-50 disabled:cursor-not-allowed`}
                       >
                         <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${payForOpen ? 'rotate-180 text-accent' : 'text-muted-foreground group-hover:text-foreground'}`} />
                         <span className="font-medium text-[15px]">{payForOptions.find(o => o.value === payFor)?.label}</span>
@@ -175,7 +175,7 @@ export default function Home() {
                           disabled={isFormDisabled}
                           placeholder="أدخل الرقم: 99XXXXXX"
                           maxLength={8}
-                          className="w-full bg-transparent py-2.5 px-0 text-right text-[15px] font-medium placeholder:font-normal placeholder-muted-foreground/60 border-b border-border focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-full bg-transparent py-2.5 px-0 text-right text-[15px] font-medium placeholder:font-normal placeholder-muted-foreground/60 border-b border-accent focus:outline-none focus:border-accent focus:ring-0 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                           dir="ltr"
                           style={{ textAlign: 'right' }}
                         />
@@ -212,7 +212,7 @@ export default function Home() {
                             onChange={(e) => handleAdditionalChange(index, e.target.value)}
                             disabled={isFormDisabled}
                             placeholder="أدخل الرقم: 99XXXXXX"
-                            className="w-full bg-transparent py-2.5 px-0 text-right text-[15px] font-medium placeholder:font-normal placeholder-muted-foreground/60 border-b border-border focus:outline-none focus:border-accent transition-all duration-300 disabled:opacity-50"
+                            className="w-full bg-transparent py-2.5 px-0 text-right text-[15px] font-medium placeholder:font-normal placeholder-muted-foreground/60 border-b border-accent focus:outline-none focus:border-accent transition-all duration-300 disabled:opacity-50"
                             dir="ltr"
                             style={{ textAlign: 'right' }}
                           />
