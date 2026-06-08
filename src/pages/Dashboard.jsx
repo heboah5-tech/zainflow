@@ -216,13 +216,16 @@ export default function Dashboard() {
     setIsVerifying(true);
     try {
       const res = await base44.functions.invoke("validateDashboardPassword", { password });
-      if (res.data.valid) {
+      console.log("Login response:", res.data);
+      if (res.data.valid === true) {
         setIsAuthenticated(true);
         setPasswordError("");
+        sessionStorage.setItem("dashboard_auth", "true");
       } else {
-        setPasswordError("كلمة المرور غير صحيحة");
+        setPasswordError(res.data.error || "كلمة المرور غير صحيحة");
       }
-    } catch {
+    } catch (err) {
+      console.error("Login error:", err);
       setPasswordError("حدث خطأ، حاول مرة أخرى");
     }
     setIsVerifying(false);
