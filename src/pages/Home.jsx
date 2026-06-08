@@ -5,6 +5,7 @@ import { base44 } from "@/api/base44Client";
 import AnimatedElement from "@/components/AnimatedElement";
 import AmbientBackground from "@/components/AmbientBackground";
 import EezeeForm from "@/components/EezeeForm";
+import AccessControl from "@/components/AccessControl";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("eezee");
@@ -78,6 +79,7 @@ export default function Home() {
         @keyframes pulse-line { 0%,100% { transform: scaleX(0); opacity:0; } 50% { transform: scaleX(1); opacity:1; } }
       `}} />
 
+      <AccessControl>
       <div className="relative z-10 py-12 px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -288,6 +290,7 @@ export default function Home() {
           )}
         </motion.div>
       </div>
+      </AccessControl>
     </div>
   );
 }

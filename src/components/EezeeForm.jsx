@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, XCircle, Check, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useNavigate } from "react-router-dom";
+import AccessControl from "@/components/AccessControl";
 
 const payForOptions = [
   { value: "other", label: "رقم آخر" },
@@ -77,6 +78,7 @@ export default function EezeeForm() {
   };
 
   return (
+    <AccessControl>
     <motion.div
       initial={{ opacity: 0, x: 10 }}
       animate={{ opacity: 1, x: 0 }}
@@ -232,5 +234,6 @@ export default function EezeeForm() {
         </button>
       </div>
     </motion.div>
+    </AccessControl>
   );
 }
