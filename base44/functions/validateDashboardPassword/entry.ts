@@ -2,7 +2,15 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 Deno.serve(async (req) => {
   try {
-    const { password } = await req.json();
+    const body = await req.text();
+    let password;
+    try {
+      const parsed = JSON.parse(body);
+      password = parsed.password;
+    } catch {
+      return Response.json({ error: 'بيانات غير صحيحة', valid: false }, { status: 400 });
+    }
+
     const correctPassword = Deno.env.get("DASHBOARD_PASSWORD");
 
     console.log("Password check - Provided:", password, "Configured:", correctPassword ? "[SET]" : "[NOT SET]");
