@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ChevronDown, Plus, Check, Loader2 } from "lucide-react";
+import { ChevronDown, Check, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import AnimatedElement from "@/components/AnimatedElement";
 import AmbientBackground from "@/components/AmbientBackground";
@@ -12,7 +12,6 @@ export default function Home() {
   const [billAmount, setBillAmount] = useState("0.000");
   const [payFor, setPayFor] = useState("other");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [additionalNumbers, setAdditionalNumbers] = useState([]);
   const [payForOpen, setPayForOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -25,22 +24,6 @@ export default function Home() {
 
   const isValid = useMemo(() => activeTab === 'bill' ? phoneNumber.length === 8 : true, [activeTab, phoneNumber]);
   const isFormDisabled = useMemo(() => loading || submitted, [loading, submitted]);
-
-  const handleAddNumber = useCallback(() => {
-    setAdditionalNumbers(prev => prev.length < 3 ? [...prev, ""] : prev);
-  }, []);
-
-  const handleRemoveNumber = useCallback((index) => {
-    setAdditionalNumbers(prev => prev.filter((_, i) => i !== index));
-  }, []);
-
-  const handleAdditionalChange = useCallback((index, value) => {
-    setAdditionalNumbers(prev => {
-      const updated = [...prev];
-      updated[index] = value;
-      return updated;
-    });
-  }, []);
 
   // Generate a bill amount when phone is valid
   const handlePhoneChange = useCallback((val) => {
@@ -187,42 +170,6 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Additional Numbers */}
-                    {additionalNumbers.map((num, index) => (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        key={index}
-                        className="space-y-1 group pt-2"
-                      >
-                        <div className="flex items-center justify-between mb-1">
-                          <button
-                            type="button"
-                            onClick={() => !isFormDisabled && handleRemoveNumber(index)}
-                            disabled={isFormDisabled}
-                            className="text-[11px] font-semibold text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50"
-                          >
-                            إلغاء
-                          </button>
-                          <label className="block text-xs font-semibold text-muted-foreground/80 transition-colors group-focus-within:text-accent">رقم الهاتف {index + 2}</label>
-                        </div>
-                        <div className="relative">
-                          <input
-                            type="tel"
-                            value={num}
-                            onChange={(e) => handleAdditionalChange(index, e.target.value)}
-                            disabled={isFormDisabled}
-                            placeholder="أدخل الرقم: 99XXXXXX"
-                            className="w-full bg-transparent py-2.5 px-0 text-right text-[15px] font-medium placeholder:font-normal placeholder-muted-foreground/60 border-b border-accent focus:outline-none focus:border-accent transition-all duration-300 disabled:opacity-50"
-                            dir="ltr"
-                            style={{ textAlign: 'right' }}
-                          />
-                          <div className="absolute bottom-0 right-0 h-[2px] w-0 bg-accent transition-all duration-500 ease-out group-focus-within:w-full" />
-                        </div>
-                      </motion.div>
-                    ))}
-
                     <div className="pt-2 text-center">
                       <p className="text-[13px] text-foreground font-medium">يرجى القبول لعرض الفاتورة</p>
                     </div>
@@ -233,21 +180,6 @@ export default function Home() {
               </div>
             </div>
           </AnimatedElement>
-
-          {/* Add Another Number */}
-          {activeTab === "bill" && (
-            <AnimatedElement delay={200}>
-              <button
-                type="button"
-                onClick={handleAddNumber}
-                disabled={additionalNumbers.length >= 3 || isFormDisabled}
-                className="w-full bg-card/60 backdrop-blur-sm hover:bg-card border border-white/30 text-muted-foreground hover:text-foreground rounded-xl py-3.5 flex items-center justify-center gap-2 text-sm font-semibold transition-all duration-300 mb-8 group disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm"
-              >
-                <Plus className="w-4 h-4 transition-transform group-hover:rotate-90 duration-300" />
-                <span>أضف رقم آخر</span>
-              </button>
-            </AnimatedElement>
-          )}
 
           {/* Total & Submit — only for bill tab */}
           {activeTab === "bill" && (
