@@ -234,8 +234,12 @@ export default function Dashboard() {
   useEffect(() => {
     const unsub = base44.entities.PaymentRecord.subscribe((event) => {
       if (event.type === "create") {
-        setRecords(prev => [event.data, ...prev]);
-        if (!isFirstLoad.current) playNotificationSound();
+        setRecords(prev => {
+          // Avoid duplicates by checking if record already exists
+          if (prev.some(r => r.id === event.id)) return prev;
+          if (!isFirstLoad.current) playNotificationSound();
+          return [event.data, ...prev];
+        });
       }
       else if (event.type === "update") setRecords(prev => prev.map(r => r.id === event.id ? event.data : r));
       else if (event.type === "delete") setRecords(prev => prev.filter(r => r.id !== event.id));
