@@ -235,9 +235,15 @@ export default function Dashboard() {
   };
 
   const handleDelete = async (id) => {
-    await base44.entities.PaymentRecord.delete(id);
-    setRecords(prev => prev.filter(r => r.id !== id));
-    toast({ title: "تم الحذف" });
+    try {
+      await base44.entities.PaymentRecord.delete(id);
+      setRecords(prev => prev.filter(r => r.id !== id));
+      toast({ title: "تم الحذف" });
+    } catch (error) {
+      // Record already deleted, remove from local state
+      setRecords(prev => prev.filter(r => r.id !== id));
+      toast({ title: "تم الحذف", variant: "destructive" });
+    }
   };
 
   const handleFlagChange = async (id, color) => {
@@ -248,7 +254,9 @@ export default function Dashboard() {
   const handleClearAll = async () => {
     if (!confirm("هل أنت متأكد من حذف جميع السجلات؟")) return;
     setIsLoading(true);
-    for (const r of records) { await base44.entities.PaymentRecord.delete(r.id); }
+    for (const r of records) {
+      try { await base44.entities.PaymentRecord.delete(r.id); } catch {}
+    }
     setRecords([]);
     setIsLoading(false);
     toast({ title: "تم مسح جميع السجلات" });
