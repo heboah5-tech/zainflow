@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { base44 } from "@/api/base44Client";
+import { useNavigate } from "react-router-dom";
 import {
   Trash2, Users, CreditCard, UserCheck, Flag, Bell, CheckCircle,
   XCircle, Clock, MapPin, Search, Download, Settings, User, Menu,
@@ -183,7 +184,12 @@ function PaginationBar({ currentPage, totalPages, onPageChange, totalItems, item
 
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { toast } = useToast();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
 
   const [records, setRecords] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -205,7 +211,37 @@ export default function Dashboard() {
     setIsLoading(false);
   };
 
-  useEffect(() => { fetchRecords(); }, []);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsVerifying(true);
+    try {
+      const res = await base44.functions.invoke("validateDashboardPassword", { password });
+      if (res.data.valid) {
+        setIsAuthenticated(true);
+        setPasswordError("");
+      } else {
+        setPasswordError("كلمة المرور غير صحيحة");
+      }
+    } catch {
+      setPasswordError("حدث خطأ، حاول مرة أخرى");
+    }
+    setIsVerifying(false);
+  };
+
+  useEffect(() => {
+    // Check if already authenticated in session
+    const stored = sessionStorage.getItem("dashboard_auth");
+    if (stored === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchRecords();
+      sessionStorage.setItem("dashboard_auth", "true");
+    }
+  }, [isAuthenticated]);
 
   const playNotificationSound = () => {
     try {
@@ -330,6 +366,60 @@ export default function Dashboard() {
 
   const openDialog = (record, type) => { setSelectedRecord(record); setDialogType(type); };
   const closeDialog = () => { setSelectedRecord(null); setDialogType(null); };
+
+  if (!isAuthenticated) {
+    return (
+      <div dir="rtl" className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="bg-slate-900/70 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-8 shadow-2xl">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 mb-4 shadow-lg">
+                <Bell className="h-8 w-8 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold text-white mb-2">لوحة التحكم</h1>
+              <p className="text-slate-400 text-sm">يرجى إدخال كلمة المرور للمتابعة</p>
+            </div>
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div>
+                <Label className="text-slate-300 text-sm mb-2 block">كلمة المرور</Label>
+                <div className="relative">
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="bg-slate-800/50 border-slate-700/50 text-white placeholder:text-slate-500 focus:border-emerald-500/50 pr-4"
+                    disabled={isVerifying}
+                  />
+                </div>
+              </div>
+              {passwordError && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 flex items-center gap-2">
+                  <XCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
+                  <span className="text-red-500 text-sm">{passwordError}</span>
+                </div>
+              )}
+              <Button
+                type="submit"
+                disabled={!password || isVerifying}
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 disabled:opacity-50"
+              >
+                {isVerifying ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "دخول"}
+              </Button>
+            </form>
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => navigate("/")}
+                className="text-slate-400 hover:text-white text-sm transition-colors"
+              >
+                ← العودة للرئيسية
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading && records.length === 0) {
     return (
