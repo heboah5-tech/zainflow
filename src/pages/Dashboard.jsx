@@ -161,72 +161,9 @@ function PaginationBar({ currentPage, totalPages, onPageChange, totalItems, item
 
 // ─── Main Dashboard ────────────────────────────────────────────────────────────
 
-function PasswordGate({ onUnlock }) {
-  const [input, setInput] = useState("");
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!input) {
-      setError(true);
-      setInput("");
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await fetch('/api/functions/validateDashboardPassword', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: input })
-      });
-      const data = await res.json();
-      if (data.valid) {
-        sessionStorage.setItem("dashboard_unlocked", "1");
-        onUnlock();
-      } else {
-        setError(true);
-        setInput("");
-      }
-    } catch {
-      setError(true);
-      setInput("");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center" dir="rtl">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-8 w-full max-w-sm space-y-6">
-        <div className="text-center space-y-2">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center shadow-lg">
-            <Bell className="h-7 w-7 text-white" />
-          </div>
-          <h1 className="text-xl font-bold text-white">لوحة التحكم</h1>
-          <p className="text-slate-400 text-sm">أدخل كلمة المرور للمتابعة</p>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="password"
-            value={input}
-            onChange={(e) => { setInput(e.target.value); setError(false); }}
-            placeholder="كلمة المرور"
-            className="w-full bg-slate-800 border border-slate-700 text-white placeholder:text-slate-500 rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500 text-right"
-            autoFocus
-          />
-          {error && <p className="text-red-400 text-sm text-center">كلمة المرور غير صحيحة</p>}
-          <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-            {loading ? "جاري التحقق..." : "دخول"}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-}
 
 export default function Dashboard() {
-  const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem("dashboard_unlocked") === "1");
   const { toast } = useToast();
 
   const [records, setRecords] = useState([]);
@@ -249,7 +186,7 @@ export default function Dashboard() {
     setIsLoading(false);
   };
 
-  useEffect(() => { if (unlocked) fetchRecords(); }, [unlocked]);
+  useEffect(() => { fetchRecords(); }, []);
 
   const playNotificationSound = () => {
     try {
@@ -276,7 +213,6 @@ export default function Dashboard() {
   // Real-time subscription
   const isFirstLoad = useRef(true);
   useEffect(() => {
-    if (!unlocked) return;
     const unsub = base44.entities.PaymentRecord.subscribe((event) => {
       if (event.type === "create") {
         setRecords(prev => [event.data, ...prev]);
@@ -363,8 +299,6 @@ export default function Dashboard() {
 
   const openDialog = (record, type) => { setSelectedRecord(record); setDialogType(type); };
   const closeDialog = () => { setSelectedRecord(null); setDialogType(null); };
-
-  if (!unlocked) return <PasswordGate onUnlock={() => setUnlocked(true)} />;
 
   if (isLoading && records.length === 0) {
     return (
