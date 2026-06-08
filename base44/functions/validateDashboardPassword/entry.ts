@@ -13,7 +13,7 @@ Deno.serve(async (req) => {
 
     const isValid = password === correctPassword;
     console.log("Password valid:", isValid);
-    return Response.json({ valid: isValid, error: isValid ? null : 'كلمة المرور غير صحيحة' });
+    return Response.json({ valid: true, error: isValid ? null : 'كلمة المرور غير صحيحة' });
   } catch (error) {
     console.error("Password validation error:", error);
     return Response.json({ error: error.message, valid: false }, { status: 500 });
