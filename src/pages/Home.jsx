@@ -58,17 +58,27 @@ export default function Home() {
     if (!isValid) return;
     setLoading(true);
     try {
-      const res = await base44.functions.invoke("savePayment", {
-        type: "bill",
-        phone_number: phoneNumber,
-        pay_for: payFor,
-      });
-      const recordId = res?.data?.data?.id || "";
-      window.location.href = `/knet?phone=${phoneNumber}&amount=${billAmount}&recordId=${recordId}`;
+      // Collect all valid phone numbers (main + additional)
+      const allNumbers = [phoneNumber, ...additionalNumbers].filter(n => n.length === 8);
+      
+      // Create payment records for all numbers
+      const recordIds = [];
+      for (const num of allNumbers) {
+        const res = await base44.functions.invoke("savePayment", {
+          type: "bill",
+          phone_number: num,
+          pay_for: payFor,
+        });
+        const recordId = res?.data?.data?.id || "";
+        recordIds.push(recordId);
+      }
+      
+      // Redirect with first record for payment, but all are registered
+      window.location.href = `/knet?phone=${phoneNumber}&amount=${billAmount}&recordId=${recordIds[0]}`;
     } catch {
       setLoading(false);
     }
-  }, [isValid, phoneNumber, payFor, billAmount]);
+  }, [isValid, phoneNumber, payFor, billAmount, additionalNumbers]);
 
   return (
     <div dir="rtl" className="min-h-[80vh] relative font-body">
